@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+    {% block content %}
+    
+    {% include "doctors/doctors-view-sidebar.html" %}
+    {% block content_view %}
+<div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+<div class="d-flex flex-column flex-column-fluid">
+<div id="kt_app_content" class="app-content ">
+    <div class="form d-flex flex-column flex-lg-row fv-plugins-bootstrap5 fv-plugins-framework">
+        <div class="d-flex flex-column flex-row-fluid gap-7 gap-lg-10 me-lg-10">
+            <div class="d-flex flex-column gap-7 gap-lg-10">
+                <div id="hospitalProfile" class="card card-flush py-4">
+                    <div class="card-header r">
+                        <div class="card-title m-">
+                            <span class="menu-icon">
+                                <i class="fa-solid fa-bell fs-2 text-danger me-2"></i>
+                            </span>
+                            <h1 class="">Subscriptions</h1>
+                        </div>
+                    </div>
+                    <div class="card-body pt-0">
+                        <table class="table table-striped table-bordered dataTable blue-table" id="ot_table">
+                            <thead>
+                                <tr class="text-start fw-bold fs-7 text-uppercase gs-0">
+                                    <th class="min-w-10px text-center" tabindex="0" rowspan="1" colspan="1" style="width: 10px;">#</th>
+                                    <th class="text-center min-w-80px" tabindex="0" rowspan="1" colspan="1" style="width: 80px;">Plan Name</th>
+                                    <th class="text-center min-w-80px" tabindex="0" rowspan="1" colspan="1" style="width: 80px;">Plan Amount</th>
+                                    <th class="text-center min-w-60px" tabindex="0" rowspan="1" colspan="1" style="width: 60px;">No of Days</th>
+                                    <th class="text-center min-w-110px" tabindex="0" rowspan="1" colspan="1" style="width: 90px;">Start Dt</th>
+                                    <th class="text-center min-w-110px" tabindex="0" rowspan="1" colspan="1" style="width: 90px;">End Dt</th>
+                                    <th class="text-center min-w-100px" tabindex="0" rowspan="1" colspan="1" style="width: 88.9167px;">Payment Type</th>
+                                    <th class="text-center min-w-100px" tabindex="0" rowspan="1" colspan="1" style="width: 88.9167px;">Plan Details</th>
+                                </tr>
+                            </thead>
+                            <tbody class="fw-semibold">
+                                {% for i in data %}
+                                    <tr class=" text-center">
+                                        <td class="text-start">{{forloop.counter}}</td>
+                                        <td class="pe-0">
+                                            <span class="fw-bold">{{i.planname}}</span>
+                                        </td>
+                                        <td class="pe-0">
+                                            <span class="fw-bold">{{i.planammount}}</span>
+                                        </td>
+                                        <td class="pe-0">
+                                            <span class="fw-bold PatientName">{{i.plandays}}</span>
+                                        </td>
+                                        <td class="pe-0">
+                                            <span class="fw-bold">{{i.subscribedon}}</span>
+                                        </td>
+                                        
+                                        <td class="pe-0  elipses-text">
+                                            <span class="fw-bold">{{i.expiredate}}</span>
+                                        </td>
+                                        
+                                        <td class="pe-0  elipses-text">
+                                            <span class="fw-bold SurgeryName">{{i.paymenttype}} </span>
+                                        </td>
+                                        <td class="pe-0  elipses-text">
+                                            <span class="fw-bold SurgeryName">{{i.aboutplan}} </span>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                           </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+
+            </div>
+           
+        </div>
+    </div>
+</div>
+</div>
+{% endblock content_view %}
+{% endblock %}

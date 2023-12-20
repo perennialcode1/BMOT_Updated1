@@ -3,22 +3,29 @@ import json
 from django.shortcuts import redirect, render
 import requests
 from django.contrib import messages
-
+import datetime
 from .config import domain_name
 from django.urls import reverse
 
 
+def get_dash_hospital_list(request):
+    data = requests.get(f'{domain_name.url}GetHospitalList?status=0').json()
+    return data['ResultData']
+
+def get_Today_Register_Hospitals_List():
+    current_date = datetime.date.today()
+    data = requests.get(f'{domain_name.url}GetRegistrationReportsOnDate?status=2&date={current_date}').json()
+    return data['ResultData']
 
 def hospital(request):
-    data = requests.get(f'{domain_name.url}GetHospitalList?status=2').json()
+    data = requests.get(f'{domain_name.url}GetHospitalList?status=0').json()
     return data
 
 def hospital_filter_list(request):
     if request.method == 'POST':
         status = request.POST.get('status')
         data = requests.get(f'{domain_name.url}GetHospitalList?status={status}').json()
-        return data
-
+        return data['ResultData']
 
 def add_hospital_form(request):
     url = f'{domain_name.url}CreateHospitalProfile'
@@ -146,14 +153,17 @@ def hospital_edit_address(request, id):
             
             api1 = f'{domain_name.url}updateHospitalsAddress'
             out1 = {"inputdata":{"address":txtAddress,"city":txtCity,"landmark":txtLandmark,"pincode":txtPincode ,"latitude":txtLatitude,"longitude":txtLongitude,"hosid":id}}
-            requests.post(api1, json = out1)
-            
-            messages.success(request, 'updated successfully...!')
-            Api = f'{domain_name.url}GetHospitalsAddress?hosid={id}'
-            ApiData = requests.get(Api).json()
-            result = ApiData['ResultData']
-            result['hosid'] = id
-            return result
+            a = requests.post(api1, json = out1)
+            print(a.json())
+            if a.json()['Status'] == True:
+                messages.success(request, 'updated successfully...!')
+                Api = f'{domain_name.url}GetHospitalsAddress?hosid={id}'
+                ApiData = requests.get(Api).json()
+                result = ApiData['ResultData']
+                result['hosid'] = id
+                return result
+            else:
+                messages.error(request, a.json()['Message'])
     return result
 
 def hospital_edit_status(request,id):

@@ -3,29 +3,39 @@ from django.shortcuts import redirect, render
 import requests
 from django.contrib import messages
 from .config import domain_name
+import datetime
 
+def get_Today_Register_Doctors_List():
+    current_date = datetime.date.today()
+    ApiData = requests.get(f'{domain_name.url}GetRegistrationReportsOnDate?status=1&date={current_date}').json()
+    if ApiData['Status'] == True:
+        return ApiData['ResultData']
+    return ApiData['ResultData']
 
+def get_dash_doctors_list(request):
+    data = requests.get(f'{domain_name.url}PhysicianList?status=0').json()
+    return data['ResultData']
 
 def get_All_Doctors_List():
     Api = (f'{domain_name.url}PhysicianList?status=2')
+    Sub_Api = requests.get(f'{domain_name.url}GetSubscriptionPlans').json()
     ApiData = requests.get(Api).json()
     if ApiData['Status'] == True:
-        return ApiData['ResultData']
-    return ApiData
+        return ApiData['ResultData'], Sub_Api['ResultData']  # Return both ApiData and Sub_Api
+    return ApiData, Sub_Api 
 
 def doctors_filter_list(request):
     if request.method == 'POST':
+        Sub_Api = requests.get(f'{domain_name.url}GetSubscriptionPlans').json()
         status = request.POST.get('status')
-        print(status)
         data = requests.get(f'{domain_name.url}PhysicianList?status={status}').json()
-        return data 
+        return data['ResultData'], Sub_Api['ResultData']
 
 def doc_send_noti(request):
     if request.method == 'POST':
         hdnPnum = request.POST.get('hdnPnum')
         noti_title = request.POST.get('notiTitle')
         noti_message = request.POST.get('notiMessage')
-        # Api_Noti = requests.get(f'{domain_name.url}sendNotificationtoSelectedPhysicians').json()
         data = {
             "inputdata":
             {
@@ -35,8 +45,30 @@ def doc_send_noti(request):
             }
         }
         Api_Noti = f'{domain_name.url}sendNotificationtoSelectedPhysicians'
-        a = requests.post(Api_Noti, json = data)
+        requests.post(Api_Noti, json = data)
         messages.success(request, 'Notification sent successfully..')
+        return data
+    
+def doc_insert_subscription(request):
+    if request.method == 'POST':
+        hdnPnum = request.POST.get('hdnPnum')
+        subplan = request.POST.get('subPlan')
+        paymentid = request.POST.get('paymentId')
+        PaymentDate = request.POST.get('PaymentDate')
+        paymenttype = request.POST.get('paymentType')
+        data = {
+            "inputdata":
+                {
+                    "subscriptionplansid": subplan,
+                    "pnum": hdnPnum,
+                    "paymentid": paymentid,
+                    "paymenttype": paymenttype,
+                    "startdate": PaymentDate
+                }
+        }
+        Api_Noti = f'{domain_name.url}InsertPhysicianSubscription'
+        a = requests.post(Api_Noti, json = data)
+        messages.success(request, 'Subscription details updated successfully..')
         return data
 
 def doctors_deletebtn(request, id):
@@ -49,24 +81,6 @@ def doctors_deletebtn(request, id):
     else:
         messages.error(request, 'Try Again SomethingWent Wrong..!')
     return redirect('doctors')
-
-# def adddoctos(request):
-#     url = '{domain_name.url}PersonalDetails?pnum=P230085'
-#     if request.method == 'POST':
-#         hospitalname = request.POST.get('hospitalname')
-#         name = request.POST.get('username')
-#         mobile = request.POST.get('mobile')
-#         email = request.POST.get('email')
-#         password = request.POST.get('password')
-#         confirmpassword = request.POST.get('confirmpassword')
-#         if password == confirmpassword:
-#             data = {"inputdata": {"hospitalname" : hospitalname,"mobile" : mobile,"email" : email,"username" : name,"psw" : password}}
-#             requests.post(url, json = data)
-#         return data
-
-# address_result = None
-# profile_result = None
-# kyc_result = None
 
 
 def doctors_profile_edit(request, id):
@@ -352,10 +366,23 @@ def doctor_address_view_get(request, id):
 def doctor_kyc_view_get(request, id):
     Api_KYC = requests.get(f'{domain_name.url}KycDetails?pnum={id}').json()
     if Api_KYC['Status'] == False:
-        a = 'no data'
+        messages.error(request, 'Something went wrong, try afetr sometime..')
     else:
         kyc_result = Api_KYC['ResultData'][0]
         return kyc_result
+    
+def doctor_documents_view_get(request, id):
+    edu_document_URL = requests.get(f'{domain_name.url}Education?pnum={id}').json()
+    reg_document_URL = requests.get(f'{domain_name.url}GetRegistrationFile?pnum={id}').json()
+    education_result = None
+    registration_result = None
+    if edu_document_URL['Status'] == False and reg_document_URL['Status'] == False:
+        messages.error(request, 'Something went wrong, try after sometime..')
+    else:
+        education_result = edu_document_URL['ResultData']
+        registration_result = reg_document_URL['ResultData']
+
+    return {'education_result': education_result, 'registration_result': registration_result}
     
 def doctor_education_view_get(request, id):
     Education_URL = requests.get(f'{domain_name.url}GetEducationDetails?pnum={id}').json()
@@ -387,7 +414,6 @@ def doctor_transaction_view_get(request, id):
         messages.info(request, 'Something went wrong, try after sometime..!')
     else:
         transaction_result = Trasanction_URL['ResultData']
-        print(transaction_result)
         return transaction_result
     
 def doctor_social_media_view_get(request, id):
@@ -412,8 +438,12 @@ def doctor_near_hospitals_view_get(request, id):
         a = 'no data'
     else:
         verify_result = Verify_URL['ResultData']
-        print(verify_result)
         return verify_result
     
-    
-
+def doctor_subscriptions_view_get(request, id):
+    response = requests.get(f'{domain_name.url}getPhysicianSubscription?pnum={id}').json()
+    if response['Status'] == False:
+        messages.info(request, 'Something went wrong try after sometime..')
+    else:
+        result = response['ResultData']
+        return result

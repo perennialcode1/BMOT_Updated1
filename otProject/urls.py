@@ -37,12 +37,15 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     
     # Hospital
+    path('hospitals-data', get_hos_dash_data, name='get_hos_dash_data'),
+    path('recent-registered-hospitals', today_hospitals_list, name='today_hospitals_list'),
     path('hospital-list', hospitals_list, name='hospital'),
     path('add-hospital-form', add_hospital, name='add_hospital'),
-    path('edit-hospital-profile/<int:id>/', hospital_profile_edit, name='hospital_profile_edit'),
+    path('edit-hospital-profile/<int:id>', hospital_profile_edit, name='hospital_profile_edit'),
     path('delete-hospital/<int:id>', hospital_delete, name='hospital_delete'),
     
     #  Hospital Edit
+    path('download_excel/', download_excel, name='download_excel'),
     path('edit-hospital-details/<int:id>', hospital_details_edit, name='hospital_details_edit'),
     path('edit-hospital-address/<int:id>', hospital_address_edit, name='hospital_address_edit'),
     path('edit-hospital-status/<int:id>', hospital_status_edit, name='hospital_status_edit'),
@@ -70,21 +73,24 @@ urlpatterns = [
 
 
     # Doctors
+    path('recent-registered-doctors', today_doctors_list, name = 'today_registered_doctors'),
+    path('doctors-data', get_doc_dash_data, name = 'get_doc_dash_data'),
     path('doctors-list', doctors_list, name = 'doctors'),
     path('doctors-delete/<int:id>', doctors_delete, name='doctors_delete'),
     path('doctors-send-notification', doctor_send_notification, name='doctor_send_notification'),
+    path('doctors-insert-subscription', doctor_insert_subscription, name='doctor_insert_subscription'),
     path('edit-doctor/<str:id>', docter_edit_btn, name='doc_editbtn'),
 
     # Doctors Edit
-    path('doctors_profile_edit/<str:id>', doctors_profile_edit, name='doctors_profile_edit'),
-    path('doctots_add/<str:id>', doctots_edit_address, name='doctots_add'),
-    path('doctors_edit_kyc/<str:id>', doctors_edit_kyc, name='doctots_edit_kyc'),
-    path('doctors_edit_bank_details/<str:id>', doctors_edit_bank_details, name='doctors_edit_bank_details'),
-    path('doctors_edit_education_details/<str:id>', doctors_edit_education_details, name='doctors_edit_education_details'),
-    path('doctors_edit_social_media/<str:id>', doctors_edit_social_media, name='doctors_edit_social_media'),
-    path('doctors_edit_professional_info/<str:id>', doctors_edit_professional_info, name='doctors_edit_professional_info'),
-    path('doctors_edit_trasanctions/<str:id>', doctors_edit_trasanctions, name='doctors_edit_trasanctions'),
-    path('doctors_edit_verify/<str:id>', doctors_edit_verify, name='doctors_edit_verify'),
+    path('doctors-profile-edit/<str:id>', doctors_profile_edit, name='doctors_profile_edit'),
+    path('doctots-add/<str:id>', doctots_edit_address, name='doctots_add'),
+    path('doctors-edit-kyc/<str:id>', doctors_edit_kyc, name='doctots_edit_kyc'),
+    path('doctors-edit-bank-details/<str:id>', doctors_edit_bank_details, name='doctors_edit_bank_details'),
+    path('doctors-edit-education-details/<str:id>', doctors_edit_education_details, name='doctors_edit_education_details'),
+    path('doctors-edit-social-media/<str:id>', doctors_edit_social_media, name='doctors_edit_social_media'),
+    path('doctors-edit-professional-info/<str:id>', doctors_edit_professional_info, name='doctors_edit_professional_info'),
+    path('doctors-edit-trasanctions/<str:id>', doctors_edit_trasanctions, name='doctors_edit_trasanctions'),
+    path('doctors-edit-verify/<str:id>', doctors_edit_verify, name='doctors_edit_verify'),
     path('phyisacode_verify/<str:id>', phyisacode_verify, name='phyisacode_verify'),
 
     # Doctors View
@@ -93,15 +99,19 @@ urlpatterns = [
     path('doctors_view_kyc/<str:id>', doctors_view_kyc, name = 'doctors_view_kyc'),
     path('doctors_view_awards/<str:id>', doctors_view_awards, name = 'doctors_view_awards'),
     path('doctors_view_education/<str:id>', doctors_view_education, name = 'doctors_view_education'),
+    path('doctors_view_documents/<str:id>', doctors_view_documents, name = 'doctors_view_documents'),
     path('doctors_view_personal_info/<str:id>', doctors_view_personal_info, name = 'doctors_view_personal_info'),
     path('doctors_view_bank/<str:id>', doctors_view_bank, name = 'doctors_view_bank'),
     path('doctors_view_transaction/<str:id>', doctors_view_transaction, name = 'doctors_view_transaction'),
     path('doctors_view_media/<str:id>', doctors_view_media, name = 'doctors_view_media'),
     path('doctors_view_verification/<str:id>', doctors_view_verification, name = 'doctors_view_verification'),
     path('doctors_view_near_hospitals/<str:id>', doctors_view_near_hospitals, name = 'doctors_view_near_hospitals'),
+    path('doctors_view_subscriptions/<str:id>', doctors_view_subscriptions, name = 'doctors_view_subscriptions'),
 
 
     # Surgeries
+    path('surgeries-data', get_surgeries_dash_data, name = 'get_surgeries_dash_data'),
+    path('surgeries-data/<int:status>', surgeries_dash_status, name = 'surgeries_dash_status'),
     path('surgeries-list', surgeries_list, name = 'surgeries_list'),
     path('surgeries-edit/<int:id>', surgeries_edit_btn, name = 'surgeries_edit_btn'),
     path('surgeries-details-edit/<int:id>', surgery_details_edit, name = 'surgeries_details_edit'),
@@ -111,8 +121,11 @@ urlpatterns = [
 
 
     # Duties
+    path('duties-data', get_duties_dash_data, name = 'get_duties_dash_data'),
+    path('duties-data/<int:type>', duties_dash_status, name = 'duties_dash_status'),
     path('duties-list', duties_list, name = 'duties_list'),
 
+    
 
     # Configs
     path('config-speciality-list', config_speciality_list, name = 'config_speciality_list'),
@@ -141,5 +154,31 @@ urlpatterns = [
     path('config-delete-image/<int:id>', config_image_delete, name = 'config_image_delete'),
     
     path('config-app-settings', config_app_settings, name = 'config_app_settings'),
+    path('config-subscriptions', config_subscriptions, name = 'config_subscriptions'),
+    path('config-add-subscription', config_add_subscription, name = 'config_add_subscription'),
+    path('config-delete-subscription/<int:id>', config_delete_subscription, name = 'config_delete_subscription'),
     
+    
+
+    # FAQ'S
+
+    # admin
+    path('get-faq-category', get_faq_category, name='get_faq_category'),
+    path('add-faq-category', admin_add_faq_category_type, name='admin_add_faq_cat_type'),
+    path('get-category-faqs', get_category_faqs, name='get_category_faqs'),
+    path('add-category-faqs', add_category_faq, name='add_category_faq'),
+    path('edit-category-faq', admin_edit_faq_category, name='admin_edit_faq_category'),
+    path('category-faq-edit', admin_edit_category_faq, name='edit_cat_faq'),
+    path('faq-category-delete/<int:id>', faq_category_delete, name='faq_category_delete'),
+    path('category-faq-delete/<int:id>', category_faq_delete, name='category_faq_delete'),
+    path('all-submited-faqs', admin_get_all_submission_faqs, name='admin_get_all_submission_faqs'),
+    path('view-faq/<int:id>', admin_view_faq, name='admin_view_faq'),
+    path('close-ticket/<int:id>', close_ticket, name='close_ticket'),
+
+    # hospital
+    path('hospital-get-faq', hospital_get_faqs, name='hospital_get_faqs'),
+    path('hospoital-category-faqs/<int:id>', get_hos_cat_faqs, name='get_hos_cat_faqs'),
+    path('submit-faq/<str:id>/<int:type>', submit_faq, name='submit_faq'),
+    path('hospital-submited-tickets/<str:hnum>', hospital_get_submited_tickets, name='hospital_get_submited_tickets'),
+    path('hospital-view-ticket/<int:id>', hospital_view_ticket, name='hospital_view_ticket'),
 ]

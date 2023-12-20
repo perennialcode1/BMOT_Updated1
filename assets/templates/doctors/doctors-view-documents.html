@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+    {% block content %}
+    
+    {% include "doctors/doctors-view-sidebar.html" %}
+    {% block content_view %}
+    <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+        <div class="d-flex flex-column flex-column-fluid">
+            <div id="kt_app_content" class="app-content ">
+                <div class="form d-flex flex-column flex-lg-row fv-plugins-bootstrap5 fv-plugins-framework">
+                    <div class="d-flex flex-column flex-row-fluid gap-7 gap-lg-10 me-lg-10">
+                        <div class="d-flex flex-column gap-7 gap-lg-10">
+                            <div id="hospitalProfile" class="card card-flush py-4">
+                                <div class="card-header r">
+                                    <div class="card-title m-">
+                                        <span class="menu-icon">
+                                            <i class="fa-regular fa-file-lines me-2 fs-1 text-info"></i>
+                                        </span>
+                                        <h1 class="">Documents</h1>
+                                    </div>
+                                </div>
+                                <div class="card-body pt-0">
+                                    <div class="row ms-7">
+                                        <h4>Education Documents: </h4>
+                                        {% if education_result %}
+                                            <ul class='ms-7'>
+                                                {% for i in education_result %}
+                                                    <li class='fs-4'>
+                                                        <a href="{{i.documentpath}}" target = "_blank">{{i.name}}</a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            <p>No education documents available.</p>
+                                        {% endif %}
+                                        <h4>Registration Documents: </h4>
+                                        {% if registration_result %}
+                                            <ul class='ms-7'>
+                                                {% for i in registration_result %}
+                                                    <li class='fs-4'>
+                                                        <a href="{{ i.documentpath }}" target="_blank">{{ i.name }}</a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            <p>No registration documents available.</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock content_view %}
+
+{% endblock %}

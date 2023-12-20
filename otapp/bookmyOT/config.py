@@ -4,7 +4,11 @@ import requests
 from django.contrib import messages
 
 class domain_name:
-    url = 'https://bookmyotapitesting.azurewebsites.net/'
+    url = "http://bookmyotservice.pythonanywhere.com/"
+
+# class domain_name_faqs:
+#     url = 'http://127.0.0.1:5000/'
+
 
 
 
@@ -360,4 +364,96 @@ def config_settings_post(request):
         ApiData = requests.get(Api).json()
         result = ApiData['ResultData']
         return result
+
+def config_subscripotions_get(request):
+    Api = (f'{domain_name.url}GetSubscriptionPlans')
+    ApiData = requests.get(Api).json()
+    if ApiData['Status'] == True:
+        return ApiData['ResultData']
+    else:
+        messages.info(request, 'Something went wrong try after sometime...')
+    return ApiData
+
+def config_edit_subscription(request):
+    if request.method == 'POST':
+        id = request.POST.get('hdnPlanId')
+        planname = request.POST.get('planName')
+        plancode = request.POST.get('planCode')
+        days = request.POST.get('planDays')
+        ammount = request.POST.get('planAmount')
+        leadsCount = request.POST.get('planCount')
+        aboutplan = request.POST.get('planAbout')
+        url = (f'{domain_name.url}InsertAndUpdateSubscriptionPlans')
+        data = {
+            "inputdata":
+                {
+                    "id": id,
+                    "planname": planname,
+                    "plancode": plancode,
+                    "days": days,
+                    "ammount": ammount,
+                    "leadsCount": leadsCount,
+                    "aboutplan": aboutplan
+                }
+            }
+        a = requests.post(url, json = data)
+        if a.json()['Status'] == True:
+            messages.success(request, 'Plan updated successfully..')
+        else:
+            messages.error(request, 'Try Again SomethingWent Wrong..!')
+        Api = f'{domain_name.url}GetSubscriptionPlans'
+        ApiData = requests.get(Api).json()
+        result = ApiData['ResultData']
+        return result
     
+def config_subscripotion_add(request):
+    if request.method == 'POST':
+        planname = request.POST.get('planName')
+        plancode = request.POST.get('planCode')
+        days = request.POST.get('planDays')
+        ammount = request.POST.get('planAmount')
+        leadsCount = request.POST.get('planCount')
+        aboutplan = request.POST.get('planAbout')
+        url = (f'{domain_name.url}InsertAndUpdateSubscriptionPlans')
+        data = {
+            "inputdata":
+                {
+                    "id": 0,
+                    "planname": planname,
+                    "plancode": plancode,
+                    "days": days,
+                    "ammount": ammount,
+                    "leadsCount": leadsCount,
+                    "aboutplan": aboutplan
+                }
+            }
+        
+        a = requests.post(url, json = data)
+        if a.json()['Status'] == True:
+            messages.success(request, 'Plan updated successfully..')
+        else:
+            messages.error(request, 'Try Again SomethingWent Wrong..!')
+        Api = f'{domain_name.url}GetSubscriptionPlans'
+        ApiData = requests.get(Api).json()
+        result = ApiData['ResultData']
+        return result
+
+def config_subscription_delete(request, id):
+    url =(f'{domain_name.url}deleteSubscriptionPlans')
+    xyz = {
+        "inputdata": 
+        {
+            "id": id
+        }
+    }
+    result = requests.post(url, json=xyz)
+    result_json = result.json()
+    if result_json['Status'] == True:
+        messages.success(request, 'Subscription plan deleted successfully...!')
+    else:
+        messages.error(request, 'Try Again SomethingWent Wrong..!')
+        
+    Api = f'{domain_name.url}GetSubscriptionPlans'
+    ApiData = requests.get(Api).json()
+    result = ApiData['ResultData']
+    return result

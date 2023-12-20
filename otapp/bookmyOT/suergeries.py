@@ -4,12 +4,29 @@ from django.contrib import messages
 from .config import domain_name
 
 
+def get_dash_surgeries_list(request):
+    data = requests.get(f'{domain_name.url}AllOTDetails').json()
+    return data['ResultData']
+
 def get_surgeries():
     Api = f'{domain_name.url}AllOTDetails'
     ApiData = requests.get(Api).json()
     if ApiData['Status'] == True:
         return ApiData['ResultData']
     return ApiData
+
+def get_status_surgeries_dash(request, status):
+    data = requests.get(f'{domain_name.url}AllOTDetails?status={status}&startdate=&enddate=').json()
+    return data['ResultData']
+
+def surgeries_filter_list(request):
+    if request.method == 'POST':
+        stdate = request.POST.get('stdate')
+        endate = request.POST.get('endate')
+        status = request.POST.get('status')
+        print(stdate, endate, status)
+        data = requests.get(f'{domain_name.url}AllOTDetails?status={status}&startdate={stdate}&enddate={endate}').json()
+        return data['ResultData']
 
 def surgery_details_edit(request, id):
     Details_result = None
@@ -90,22 +107,28 @@ def surgery_details_edit(request, id):
 
 def physician_notes_edit(request, id):
     Physician_URL = requests.get(f'{domain_name.url}getPhysicianNotes?caseid={id}').json()
+    Paymenyt_URL = requests.get(f'{domain_name.url}paymentrecived?type=1&id={id}').json()
     if Physician_URL['Status'] == False:
         data = {"Age":'',"AnaethesiaPrice":'',"BloodPressure":'',"CaseId":id,"CaseName01":"","CaseNumber":"","Casename":"","ComorbidconditionsPrice":'',"EndTime":'',"Gender":"","HeartRate":'',"Note1":"","NoteDate":'',"Option":'',"":'',"PatientDiagnostics":"","PatientName":"","Phone":"","PreExisitngConditionPrice":'',"RespiratoryRate":'',"StartTime":'',"Temperature":'',"TotalCost":'',"apsamount":'',"caseid":id,"charges":'',"consultationamount":'',"documentpath":[],"endcasevital":[],"extratimeammount":'',"hosloc":"Vidhya nagar","hosname":"","otanaesthesia":'',"otpreexisitngcondition":'',"otsurgeries":'',"splsurgeryPrice":'',"tdsdeductions":'',"vitalprice":''}
         Physician_result = data
-        return Physician_result
+        Paymenyt_result = 'No Payment History'
+        return Physician_result, Paymenyt_result
     else:
         Physician_result = Physician_URL['ResultData']
-        return Physician_result
+        Paymenyt_result = Paymenyt_URL['ispaymentreceived']
+        return Physician_result, Paymenyt_result
 
 def patient_diagnostics_edit(request, id):
     Diagnostics_result = None
     Diagnostics_URL = requests.get(f'{domain_name.url}GetOTRegisterDetails?caseid={id}').json()
     Diagnostics_result = Diagnostics_URL['ResultData'][0]
-    bp = str(Diagnostics_result['bloodpressure'])
-    parts = bp.split('.')
-    bp = parts[0]
-    Diagnostics_result['bp'] = bp
+    try:
+        bp = str(Diagnostics_result['bloodpressure'])
+        parts = bp.split('.')
+        bp = parts[0]
+        Diagnostics_result['bp'] = bp
+    except:
+        pass
     Pre_Exe_Con_URL = requests.get(f'{domain_name.url}GetPreExistingConditions').json()
     preexecon_dropdown_data = Pre_Exe_Con_URL['ResultData']
     Diagnostics_result['preexecon_dropdown_data'] = preexecon_dropdown_data

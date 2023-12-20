@@ -23,7 +23,7 @@
                             </svg>
                         </span>
                     </li>
-                    <li class="breadcrumb-item text-gray-700 fw-bold lh-1">Surgeries</li>
+                    <li class="breadcrumb-item text-gray-700 fw-bold lh-1 fs-4">Surgeries</li>
                     <li class="breadcrumb-item">
                         <span class="svg-icon svg-icon-5 svg-icon-gray-700 mx-n2">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -34,7 +34,7 @@
                             </svg>
                         </span>
                     </li>
-                    <li class="breadcrumb-item text-gray-700 fw-bold lh-1">Edit</li>
+                    <li class="breadcrumb-item text-gray-700 fw-bold lh-1 fs-4">Edit</li>
                 </ul>
             </div>
             <div class="d-flex align-items-center gap-3">
@@ -72,19 +72,19 @@
 						fs-6
 					">
                     <div class="menu-item">
-                        <a href="{% url 'surgeries_edit_btn' caseid %}" class="menu-link" id="SurgeryDetailsBtn">
+                        <a href="{% url 'surgeries_edit_btn' data.caseid %}" class="menu-link" id="SurgeryDetailsBtn">
                             <span class="menu-icon"><i class="bi bi-heart-pulse text-primary"></i></span>
                             <span class="menu-title">Details</span>
                         </a>
                     </div>
                     <div class="menu-item">
-                        <a href="{% url 'surgery_patient_diagnostics_edit' caseid %}" class="menu-link" id="SurgeryReportsBtn">
+                        <a href="{% url 'surgery_patient_diagnostics_edit' data.caseid %}" class="menu-link" id="SurgeryReportsBtn">
                             <span class="menu-icon"><i class="bi bi-clipboard2-pulse text-success"></i></span>
                             <span class="menu-title">Patient Diagnostics</span>
                         </a>
                     </div>
                     <div class="menu-item">
-                        <a href="{% url 'surgery_physician_notes_edit' caseid %}" class="menu-link" id="PhysicianNotesBtn">
+                        <a href="{% url 'surgery_physician_notes_edit' data.caseid %}" class="menu-link" id="PhysicianNotesBtn">
                             <span class="menu-icon"><i class="bi bi-prescription text-info"></i></span>
                             <span class="menu-title">Physician Notes</span>
                         </a>
@@ -101,6 +101,13 @@
 
 
             <div class="card-toolbar">
+                {% if pay_data == True %}
+                <button class='btn btn-success me-4'>Payment Received<i class="fa-solid fa-check fw-bold fs-4 ms-1"></i></button>
+                {% elif pay_data == False %}
+                <button class='btn btn-warning me-4'>Payment Pending<i class="fa-solid fa-hourglass-half fs-4 ms-1"></i></button>
+                {% else %}
+                <h5 class='ms-4 text-danger me-4'>{{pay_data}}</h5>
+                {% endif %}
                 <button type="button" id="btnDownloadPdf" class="btn btn-info">Download</button>
             </div>
         </div>
@@ -124,7 +131,7 @@
                                     </div>
                                     <div class="col-xl-8 fv-row fv-plugins-icon-container">
                                         <div class="fs-6 fw-semibold mt-2 mb-3">
-                                            <label id="lblPatientName">{{PatientName}}</label>
+                                            <label id="lblPatientName">{{data.PatientName}}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -134,7 +141,7 @@
                                     </div>
                                     <div class="col-xl-8 fv-row fv-plugins-icon-container">
                                         <div class="fs-6 fw-semibold mt-2 mb-3">
-                                            <label id="lblGender">{{Gender}}</label>
+                                            <label id="lblGender">{{data.Gender}}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -144,7 +151,7 @@
                                     </div>
                                     <div class="col-xl-8 fv-row fv-plugins-icon-container">
                                         <div class="fs-6 fw-semibold mt-2 mb-3">
-                                            <label id="lblStarttime">{{StartTime}}</label>
+                                            <label id="lblStarttime">{{data.StartTime}}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -154,7 +161,7 @@
                                     </div>
                                     <div class="col-xl-8 fv-row fv-plugins-icon-container">
                                         <div class="fs-6 fw-semibold mt-2 mb-3">
-                                            <label id="lblPatientdiagnostics">{{PatientDiagnostics}}</label>
+                                            <label id="lblPatientdiagnostics">{{data.PatientDiagnostics}}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -166,7 +173,7 @@
                                     </div>
                                     <div class="col-xl-8 fv-row fv-plugins-icon-container">
                                         <div class="fs-6 fw-semibold mt-2 mb-3">
-                                            <label id="lblAge">{{Age}}</label>
+                                            <label id="lblAge">{{data.Age}}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -176,7 +183,7 @@
                                     </div>
                                     <div class="col-xl-8 fv-row fv-plugins-icon-container">
                                         <div class="fs-6 fw-semibold mt-2 mb-3">
-                                            <label id="lblNotesDate">{{NoteDate}}</label>
+                                            <label id="lblNotesDate">{{data.NoteDate}}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -186,7 +193,7 @@
                                     </div>
                                     <div class="col-xl-8 fv-row fv-plugins-icon-container">
                                         <div class="fs-6 fw-semibold mt-2 mb-3">
-                                            <label id="lblEndtime">{{EndTime}}</label>
+                                            <label id="lblEndtime">{{data.EndTime}}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -212,7 +219,7 @@
                                     </div>
                                     <div class="col-xl-8 fv-row fv-plugins-icon-container">
                                         <div class="fs-6 fw-semibold mt-2 mb-3">
-                                            <label id="lblBloodpressure">{{BloodPressure}}</label>
+                                            <label id="lblBloodpressure">{{data.BloodPressure}}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -222,7 +229,7 @@
                                     </div>
                                     <div class="col-xl-8 fv-row fv-plugins-icon-container">
                                         <div class="fs-6 fw-semibold mt-2 mb-3">
-                                            <label id="lblHeartrate">{{HeartRate}}</label>
+                                            <label id="lblHeartrate">{{data.HeartRate}}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -232,7 +239,7 @@
                                     </div>
                                     <div class="col-xl-8 fv-row fv-plugins-icon-container">
                                         <div class="fs-6 fw-semibold mt-2 mb-3">
-                                            <label id="lblOxygensaturation">{{OxygenSaturation}}</label>
+                                            <label id="lblOxygensaturation">{{data.OxygenSaturation}}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -242,7 +249,7 @@
                                     </div>
                                     <div class="col-xl-8 fv-row fv-plugins-icon-container">
                                         <div class="fs-6 fw-semibold mt-2 mb-3">
-                                            <label id="lblRespiratoryrate">{{RespiratoryRate}}</label>
+                                            <label id="lblRespiratoryrate">{{data.RespiratoryRate}}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -252,7 +259,7 @@
                                     </div>
                                     <div class="col-xl-8 fv-row fv-plugins-icon-container">
                                         <div class="fs-6 fw-semibold mt-2 mb-3">
-                                            <label id="lblTemperature">{{Temperature}}</label>
+                                            <label id="lblTemperature">{{data.Temperature}}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -272,7 +279,7 @@
                                     </div>
                                     <div class="col-xl-8 fv-row fv-plugins-icon-container">
                                         <div class="fs-6 fw-semibold mt-2 mb-3">
-                                            <label id="lblFinalBloodpressure">{{BloodPressure}}</label>
+                                            <label id="lblFinalBloodpressure">{{data.BloodPressure}}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -282,7 +289,7 @@
                                     </div>
                                     <div class="col-xl-8 fv-row fv-plugins-icon-container">
                                         <div class="fs-6 fw-semibold mt-2 mb-3">
-                                            <label id="lblFinalHeartrate">{{HeartRate}}</label>
+                                            <label id="lblFinalHeartrate">{{data.HeartRate}}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -302,7 +309,7 @@
                                     </div>
                                     <div class="col-xl-8 fv-row fv-plugins-icon-container">
                                         <div class="fs-6 fw-semibold mt-2 mb-3">
-                                            <label id="lblFinalRespiratoryrate">{{OxygenSaturation}}</label>
+                                            <label id="lblFinalRespiratoryrate">{{data.OxygenSaturation}}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -312,7 +319,7 @@
                                     </div>
                                     <div class="col-xl-8 fv-row fv-plugins-icon-container">
                                         <div class="fs-6 fw-semibold mt-2 mb-3">
-                                            <label id="lblFinalTemperature">{{Temperature}}</label>
+                                            <label id="lblFinalTemperature">{{data.Temperature}}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -353,7 +360,7 @@
                                         </div>
                                         <div class="col-xl-6 fv-row fv-plugins-icon-container">
                                             <div class="fs-6 fw-semibold mt-2 mb-3">
-                                                <label id="lblAnaethesiaPrice">{{AnaethesiaPrice}}</label>
+                                                <label id="lblAnaethesiaPrice">{{data.AnaethesiaPrice}}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -367,7 +374,7 @@
                                         </div>
                                         <div class="col-xl-6 fv-row fv-plugins-icon-container">
                                             <div class="fs-6 fw-semibold mt-2 mb-3">
-                                                <label id="lblsplsurgeryPrice">{{splsurgeryPrice}}</label>
+                                                <label id="lblsplsurgeryPrice">{{data.splsurgeryPrice}}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -381,7 +388,7 @@
                                         </div>
                                         <div class="col-xl-6 fv-row fv-plugins-icon-container">
                                             <div class="fs-6 fw-semibold mt-2 mb-3">
-                                                <label id="lblPreExisitngConditionPrice">{{PreExisitngConditionPrice}}</label>
+                                                <label id="lblPreExisitngConditionPrice">{{data.PreExisitngConditionPrice}}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -397,7 +404,7 @@
                                         </div>
                                         <div class="col-xl-6 fv-row fv-plugins-icon-container">
                                             <div class="fs-6  mt-2 mb-3">
-                                                <label id="lblComorbidconditionsPrice">{{ComorbidconditionsPrice}}</label>
+                                                <label id="lblComorbidconditionsPrice">{{data.ComorbidconditionsPrice}}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -412,7 +419,7 @@
                                         </div>
                                         <div class="col-xl-6 fv-row fv-plugins-icon-container">
                                             <div class="fs-6  mt-2 mb-3">
-                                                <label id="lblvitalprice">{{vitalprice}}</label>
+                                                <label id="lblvitalprice">{{data.vitalprice}}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -440,7 +447,7 @@
                                         </div>
                                         <div class="col-xl-6 fv-row fv-plugins-icon-container">
                                             <div class="fs-6 fw-semibold mt-2 mb-3">
-                                                <label id="lbltdsdeductions">{{tdsdeductions}}</label>
+                                                <label id="lbltdsdeductions">{{data.tdsdeductions}}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -457,7 +464,7 @@
                                     </div>
                                     <div class="col-xl-6 fv-row fv-plugins-icon-container">
                                         <div class="fs-6 fw-semibold mt-2 mb-3">
-                                            <label id="lblSettlementAmount">{{apsamount}}</label>
+                                            <label id="lblSettlementAmount">{{data.apsamount}}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -472,7 +479,7 @@
                             </div>
                             <div class="col-xl-8 fv-row fv-plugins-icon-container">
                                 <div class="fs-6 fw-semibold mt-2 mb-3">
-                                    <label id="lblNotes">{{Note1}}</label>
+                                    <label id="lblNotes">{{data.Note1}}</label>
                                 </div>
                             </div>
                         </div>
@@ -483,8 +490,16 @@
                                 <div class="fs-6 fw-semibold mt-2 mb-3"><b>Documents:</b></div>
                             </div>
                         </div>
-                        <div class="row" id="div_Documents">
-                            <div id="lblDocumentPath">{{documentpath}}</div>
+                        <div class="row ms-3" id="">
+                            <div id="lblDocumentPath">
+                                {% for i in document_link %}
+                                    <ul>
+                                        <li>
+                                            <a href="{{i.documentpath}}" target="_blank">Document {{forloop.counter}}</a>
+                                        </li>
+                                    </ul>
+                                {% endfor %}
+                            </div>
                         </div>
 
                     </div>
